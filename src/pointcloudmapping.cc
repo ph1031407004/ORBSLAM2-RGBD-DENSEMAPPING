@@ -7,14 +7,13 @@ namespace ORB_SLAM2
 {
     PointCloudMapping::PointCloudMapping(double resolution_,double meank_,double thresh_)
     {
-
         this->resolution = resolution_;
         this->meank = thresh_;
         this->thresh = thresh_;
         //滤波参数设置
-        statistical_filter.setMeanK(meank);
+        /*statistical_filter.setMeanK(meank);
         statistical_filter.setStddevMulThresh(thresh);
-        voxel.setLeafSize( resolution, resolution, resolution);
+        voxel.setLeafSize( resolution, resolution, resolution);*/
 
         std::cout << "Point cloud mapping has structed. " << std::endl;
         //下面这句代码理解
@@ -24,7 +23,7 @@ namespace ORB_SLAM2
 
     void PointCloudMapping::InsertKeyFrame(KeyFrame* kf, cv::Mat &color_img, cv::Mat &depth_img,int idk,vector<KeyFrame*> vpKFs)
     {
-        cout << "recieve a keyframe, id = " << idk << "第"<< kf->mnId << endl;//
+        cout << "recieve a keyframe, idk = " << idk << "第"<< kf->mnId << endl;//
 
         unique_lock<mutex> lck(mmKeyFrameMutex);
         mvKeyFrames.push_back(kf);
@@ -49,25 +48,33 @@ namespace ORB_SLAM2
         // cv::imshow("color img", color_img);
         // cv::imshow("depth img", depth_img);
         PointCloud::Ptr tmp (new PointCloud());
-        for ( int m=0; m<depth_img.rows; m+=3 )
+        for ( int m=0; m<depth_img.rows; m+=3 )//+1质量更好
         {
             for ( int n=0; n<depth_img.cols; n+=3 )
             {
                 float d = depth_img.ptr<float>(m)[n];
-                if (d < 0.01 || d>5)
-                    continue;
-                PointT p;
-                p.z = d;
-                p.x = ( n - kf->cx) * p.z / kf->fx;
-                p.y = ( m - kf->cy) * p.z / kf->fy;
                 
-                p.b = color_img.ptr<uchar>(m)[n*3];
-                p.g = color_img.ptr<uchar>(m)[n*3+1];
-                p.r = color_img.ptr<uchar>(m)[n*3+2];
-
-                // cout << p.x << " " << p.y << " " << p.z << endl;
+                if(std::isnan(d)){
+                    d = 0;//不处理会让ros环境下显示的点云颜色信息有误  
+                    //cout <<"D=Nan"<<endl;
+                }
+                else{
+                    if (d < 0.01 || d>5)
+                    continue;
+                    PointT p;
+                    p.z = d;
+                    p.x = ( n - kf->cx) * p.z / kf->fx;
+                    p.y = ( m - kf->cy) * p.z / kf->fy;
                     
-                tmp->points.push_back(p);
+                    p.b = color_img.ptr<uchar>(m)[n*3];
+                    p.g = color_img.ptr<uchar>(m)[n*3+1];
+                    p.r = color_img.ptr<uchar>(m)[n*3+2];
+
+                    // cout << p.x << " " << p.y << " " << p.z << endl;
+                        
+                    tmp->points.push_back(p);
+                }
+                
             }
         }
         cout<<"generate point cloud for kf "<<kf->mnId<<", size="<<tmp->points.size()<<endl;
@@ -105,8 +112,8 @@ namespace ORB_SLAM2
             }
             cout<<"finishloopmap"<<endl;
             //滤波
-            /*
-            PointCloud::Ptr tmp2(new PointCloud());
+            
+            /*PointCloud::Ptr tmp2(new PointCloud());
             voxel.setInputCloud( tmp1 );
             voxel.filter( *tmp2 );
             mpGlobalCloud->swap( *tmp2 );*/
@@ -184,14 +191,14 @@ namespace ORB_SLAM2
             cout << "Total has point clouds: " << mpGlobalCloud->points.size() << endl;
                
             
-            /*//滤波  加上这部分代码就会段错误
-            PointCloud::Ptr tmp1 ( new PointCloud );       
+            //滤波  加上这部分代码就会段错误
+            /*PointCloud::Ptr tmp1 ( new PointCloud );       
             statistical_filter.setInputCloud(mpGlobalCloud);
             statistical_filter.filter( *tmp1 );
             PointCloud::Ptr tmp(new PointCloud());
             voxel.setInputCloud( tmp1 );
-            voxel.filter( *mpGlobalCloud );
-            //globalMap->swap( *tmp );*/
+            voxel.filter( *mpGlobalCloud );*/
+            //globalMap->swap( *tmp );
             
 
 

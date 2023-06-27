@@ -243,7 +243,7 @@ cv::Mat System::TrackStereo(const cv::Mat &imLeft, 		//左侧图像
 }
 
 //当输入图像 为RGBD时进行的追踪，参数就不在一一说明了
-cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const double &timestamp)
+cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const double &timestamp)//,pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& cloud
 {
 	//判断输入数据类型是否合法
     if(mSensor!=RGBD)
@@ -291,6 +291,8 @@ cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const doub
     //获得相机位姿的估计
     cv::Mat Tcw = mpTracker->GrabImageRGBD(im,depthmap,timestamp);
 
+    //获得全局点云
+    //*cloud = *(mpPointCloudMapping->mpGlobalCloud);
     unique_lock<mutex> lock2(mMutexState);
     mTrackingState = mpTracker->mState;
     mTrackedMapPoints = mpTracker->mCurrentFrame.mvpMapPoints;
@@ -647,11 +649,18 @@ vector<cv::KeyPoint> System::GetTrackedKeyPointsUn()
 }
 
 //保存pcd
-void System::ClosePointCloudeMapping(){
+void System::ClosePointCloudeMapping()
+{
     mpPointCloudMapping->SaveDenseMap();
     mpPointCloudMapping->ShutDown();//还关闭了一次的
     
 
+}
+
+//获取全局稠密点云接口
+pcl::PointCloud<pcl::PointXYZRGBA>::Ptr System::Getglobalcloud()
+{
+    return(mpPointCloudMapping->mpGlobalCloud);
 }
 
 } //namespace ORB_SLAM

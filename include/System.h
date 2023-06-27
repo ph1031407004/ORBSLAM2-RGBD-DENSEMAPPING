@@ -94,7 +94,8 @@ public:
     // NOTE 而在这里对RGBD图像的说法则是“配准”
     cv::Mat TrackRGBD(const cv::Mat &im,                //彩色图像
                       const cv::Mat &depthmap,          //深度图像
-                      const double &timestamp);         //时间戳
+                      const double &timestamp);          //时间戳  
+                      //点云  pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& cloud     
 
     // Proccess the given monocular frame
     // Input images: RGB (CV_8UC3) or grayscale (CV_8U). RGB is converted to grayscale.
@@ -151,6 +152,9 @@ public:
     // LoadMap(const string &filename);
     void ClosePointCloudeMapping();//ClosePointCloudeMapping
 
+    //获取全局稠密点云函数声明
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr Getglobalcloud();
+        
     // Information from most recent processed frame
     // You can call this right after TrackMonocular (or stereo or RGBD)
     //获取最近的运动追踪状态、地图点追踪状态、特征点追踪状态（）

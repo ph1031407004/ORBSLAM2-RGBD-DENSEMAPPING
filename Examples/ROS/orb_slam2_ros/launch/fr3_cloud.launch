@@ -1,0 +1,21 @@
+<launch>
+
+  
+
+    <node pkg="rosbag" type="play" name="bag_record" 
+        args="/home/huag/learning_slam/Pro/data/rgbd_dataset_freiburg3_long_office_household.bag"
+        
+    />
+    
+    <node name= "orb_slam2_ros" pkg="orb_slam2_ros" type="RGBD"  
+    args="/home/huag/learning_slam/ROS_Pro/catkin_ws/src/ORB_SLAM2_dense_maping-master/Vocabulary/ORBvoc.txt 
+                 /home/huag/learning_slam/ROS_Pro/catkin_ws/src/ORB_SLAM2_dense_maping-master/Examples/ROS/orb_slam2_ros/TUM1_ROS.yaml"
+    output="screen"
+    />
+ 
+  <node pkg="rviz" type="rviz" name="rviz" respawn = "false" output = "screen" args="-d $(find orb_slam2_ros)/cloud.rviz"/>
+
+	
+    
+
+</launch>

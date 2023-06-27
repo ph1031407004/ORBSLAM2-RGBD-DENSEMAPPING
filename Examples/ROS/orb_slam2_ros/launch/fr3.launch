@@ -1,0 +1,14 @@
+<launch>
+    <!--启动ORB-SLAM2 RGBD-->
+    <node name ="orb_slam2_ros" pkg="orb_slam2_ros" type="RGBD" 
+        args="/home/huag/learning_slam/ROS_Pro/catkin_ws/src/ORB_SLAM2_dense_maping-master/Vocabulary/ORBvoc.txt" output="screen
+              /home/huag/learning_slam/ROS_Pro/catkin_ws/src/ORB_SLAM2_dense_maping-master/Examples/ROS/orb_slam2_ros/TUM1_ROS.yaml"
+    />
+    <!--bag数据回放-->
+    <node pkg="rosbag" type="play" name="player" 
+    args="/home/huag/learning_slam/Pro/data/rgbd_dataset_freiburg3_long_office_household.bag"
+    output="screen" 
+    />
+    <!-- 注意这里bag文件的路径必须为绝对路径-->
+
+</launch>

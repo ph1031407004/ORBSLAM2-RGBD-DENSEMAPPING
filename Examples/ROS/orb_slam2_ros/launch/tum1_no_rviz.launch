@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+    <!--定义全局参数-->
+    <arg name="path_to_vacabulary" default="/home/huag/learning_slam/ROS_Pro/catkin_ws/src/ORB_SLAM2_dense_maping-master/Vocabulary
+/ORBvoc.txt"/>
+    <arg name="path_to_settings" default="/home/huag/learning_slam/ROS_Pro/catkin_ws/src/ORB_SLAM2_dense_maping-master/Examples/ROS/ORB_SLAM2/TUM1_ROS.yaml"/>
+    
+   
+    <!--启动ORB-SLAM2 RGBD-->
+    <node name ="RGBD" pkg="ORB_SLAM2" type="RGBD" 
+        args="$(arg path_to_vacabulary) $(arg path_to_settings)" respawn="true" output="screen">
+    </node>
+    <!--bag数据回放-->
+    <node pkg="rosbag" type="play" name="player" output="screen" args="/home/huag/learning_slam/Pro/data/rgbd_dataset_freiburg3_long_office_household.bag"/>
+    <!-- 注意这里bag文件的路径必须为绝对路径-->
+
+</launch>
+

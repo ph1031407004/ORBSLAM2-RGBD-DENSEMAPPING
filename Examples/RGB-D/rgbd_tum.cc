@@ -42,7 +42,7 @@
 #include<System.h>
 
 using namespace std;
-
+//pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGBA>>();
 /**
  * @brief 加载图像
  * 
@@ -126,8 +126,8 @@ int main(int argc, char **argv)
     
         // Pass the image to the SLAM system
         //! 追踪
+       // SLAM.TrackRGBD(imRGB,imD,tframe,cloud);
         SLAM.TrackRGBD(imRGB,imD,tframe);
-
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 #else
