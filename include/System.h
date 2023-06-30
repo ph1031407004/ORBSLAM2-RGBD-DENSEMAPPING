@@ -154,6 +154,8 @@ public:
 
     //获取全局稠密点云函数声明
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr Getglobalcloud();
+
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr Getglobalcloud2();
         
     // Information from most recent processed frame
     // You can call this right after TrackMonocular (or stereo or RGBD)
@@ -234,6 +236,8 @@ private:
     std::vector<MapPoint*> mTrackedMapPoints;
     std::vector<cv::KeyPoint> mTrackedKeyPointsUn;
     std::mutex mMutexState;
+
+    
 };
 
 }// namespace ORB_SLAM

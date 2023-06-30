@@ -183,7 +183,11 @@ namespace ORB_SLAM2
                 PointCloud::Ptr p (new PointCloud);
                 pcl::transformPointCloud(*(pointcloud[i].pcE), *p, pointcloud[i].T.inverse().matrix());
                 //cout<<"处理好第i个点云"<<i<<endl;
+                //加锁
+                std::unique_lock<mutex> lock_GlobalCloud(mMutexGlobalCloud);
+                {
                 *mpGlobalCloud += *p;
+                }
             }
             //这下面的作用
             mnLastKeyFrameId = N;
@@ -207,5 +211,15 @@ namespace ORB_SLAM2
             cout<<"show global map, size="<<N<<"   "<<mpGlobalCloud->points.size()<<endl;
             
         }
+    }
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr PointCloudMapping::CloneGlobalcloud()
+    {
+        pcl::PointCloud<pcl::PointXYZRGBA>::Ptr tmp( new pcl::PointCloud<pcl::PointXYZRGBA>);
+        std::unique_lock<mutex> lockGlobalPCinClone(mMutexGlobalCloud);
+        {
+            // *PC = *mpGlobalCloud;
+            pcl::copyPointCloud(*mpGlobalCloud,*tmp);
+        }
+        return tmp;
     }
 }

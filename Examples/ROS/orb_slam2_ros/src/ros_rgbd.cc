@@ -151,7 +151,9 @@ int main(int argc, char **argv)
         pcl::PointCloud<pcl::PointXYZRGBA>::Ptr Out_cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGBA>>();
         pcl::PointCloud<pcl::PointXYZRGBA> cloud2;//旋转之后的点云
         sensor_msgs::PointCloud2 pub_cloud;
-        Out_cloud=igb.mpSLAM->Getglobalcloud();
+
+        //Out_cloud=igb.mpSLAM->Getglobalcloud();
+        Out_cloud=igb.mpSLAM->Getglobalcloud2();//加上锁之后
 
         cloud2 = (* Out_cloud);//拷贝
 

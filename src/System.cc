@@ -28,6 +28,7 @@
 #include <pangolin/pangolin.h>		//可视化界面
 #include <iomanip>					//主要是对cin,cout之类的一些操纵运算子
 #include <unistd.h>
+#include "pointcloudmapping.h"
 namespace ORB_SLAM2
 {
 
@@ -660,7 +661,14 @@ void System::ClosePointCloudeMapping()
 //获取全局稠密点云接口
 pcl::PointCloud<pcl::PointXYZRGBA>::Ptr System::Getglobalcloud()
 {
-    return(mpPointCloudMapping->mpGlobalCloud);
+   
+    return (mpPointCloudMapping->mpGlobalCloud);
+}
+
+
+pcl::PointCloud<pcl::PointXYZRGBA>::Ptr System::Getglobalcloud2()
+{
+    return (mpPointCloudMapping->CloneGlobalcloud());
 }
 
 } //namespace ORB_SLAM

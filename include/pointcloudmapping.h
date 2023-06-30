@@ -37,6 +37,8 @@ namespace ORB_SLAM2
         void SaveDenseMap();
 
         void ShutDown();
+
+        pcl::PointCloud<pcl::PointXYZRGBA>::Ptr CloneGlobalcloud();
         
         
         PointCloud::Ptr mpGlobalCloud; //全局点云变量
@@ -73,6 +75,9 @@ namespace ORB_SLAM2
         //停止点云建图的标志位
         // bool loopbusy;  
         bool bStop = false;
+
+        ////全局点云拷贝
+        std::mutex   mMutexGlobalCloud;
     };
 }
 
